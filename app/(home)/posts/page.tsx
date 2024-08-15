@@ -1,15 +1,18 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Card } from '@radix-ui/themes';
+import { Card, Button } from '@radix-ui/themes';
 import postNewPost from '@/services/clients/post-new-post';
-import getAllApprovedPosts from '@/services/clients/get-all-approved-posts';
+import getAllPosts from '@/services/clients/get-all-posts';
+import approvePost from '@/services/clients/approve-post';
+import { useAuth } from '@/hooks/use-auth';
 
 const PostPage = () => {
     const [posts, setPosts] = useState([]);
     const [newPost, setNewPost] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { isAdmin } = useAuth();
 
     useEffect(() => {
         fetchPosts();
@@ -18,7 +21,7 @@ const PostPage = () => {
     const fetchPosts = async () => {
         try {
             setIsLoading(true);
-            const { data, error } = await getAllApprovedPosts();
+            const { data, error } = await getAllPosts();
             if (error) throw error;
             setPosts(data);
         } catch (err) {
@@ -28,7 +31,11 @@ const PostPage = () => {
             setIsLoading(false);
         }
     };
-    console.log('all approved post', posts)
+
+    const showApproveButton = isAdmin;
+    const showNotApprovedPosts = isAdmin;
+    const filteredPosts = showNotApprovedPosts ? posts : posts.filter(post => post.is_approved);
+
 
     const handleAddPost = async () => {
         if (newPost.trim()) {
@@ -44,8 +51,24 @@ const PostPage = () => {
         }
     };
 
+    const handleApprovePost = async ({ postId }) => {
+        try {
+            const { data, error } = await approvePost({ postId });
+            if (error) throw error;
+
+            // Update the local state to reflect the approved post
+            setPosts(prevPosts => prevPosts.map(post =>
+                post.id === postId ? { ...post, is_approved: true } : post
+            ));
+        } catch (err) {
+            setError('Failed to approve post');
+            console.error('Error approving post:', err);
+        }
+    };
+
     if (isLoading) return <div>Loading posts...</div>;
     if (error) return <div>Error: {error}</div>;
+    console.log('filteredPost', filteredPosts)
 
     return (
         <div className="p-4">
@@ -94,12 +117,20 @@ const PostPage = () => {
                 </Dialog.Root>
             </div>
             <div className="space-y-4">
-                {posts.map((post) => (
+                {filteredPosts.map((post) => (
                     <Card key={post.id} className="p-4 bg-white shadow rounded">
                         <p>{post.body}</p>
                         <p className="text-sm text-gray-500 mt-2">
                             Posted on: {new Date(post.created_at).toLocaleString()}
                         </p>
+                        {!post.is_approved && showApproveButton && (
+                            <Button
+                                onClick={() => handleApprovePost({ postId: post.id })}
+                                className="bg-green-500 hover:bg-green-600 text-white"
+                            >
+                                Approve
+                            </Button>
+                        )}
                     </Card>
                 ))}
             </div>
