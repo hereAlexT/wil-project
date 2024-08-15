@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Card } from '@radix-ui/themes';
 import postNewPost from '@/services/clients/post-new-post';
-import getAllPosts from '@/services/clients/get-all-posts';
+import getAllApprovedPosts from '@/services/clients/get-all-approved-posts';
 
 const PostPage = () => {
     const [posts, setPosts] = useState([]);
@@ -18,7 +18,7 @@ const PostPage = () => {
     const fetchPosts = async () => {
         try {
             setIsLoading(true);
-            const { data, error } = await getAllPosts();
+            const { data, error } = await getAllApprovedPosts();
             if (error) throw error;
             setPosts(data);
         } catch (err) {
@@ -28,6 +28,7 @@ const PostPage = () => {
             setIsLoading(false);
         }
     };
+    console.log('all approved post', posts)
 
     const handleAddPost = async () => {
         if (newPost.trim()) {
