@@ -8,10 +8,10 @@ import approvePost from '@/services/clients/approve-post';
 import { useAuth } from '@/hooks/use-auth';
 
 const PostPage = () => {
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<any>([]);
     const [newPost, setNewPost] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<any>(null);
     const { isAdmin } = useAuth();
 
     useEffect(() => {
@@ -34,7 +34,7 @@ const PostPage = () => {
 
     const showApproveButton = isAdmin;
     const showNotApprovedPosts = isAdmin;
-    const filteredPosts = showNotApprovedPosts ? posts : posts.filter(post => post.is_approved);
+    const filteredPosts = showNotApprovedPosts ? posts : posts.filter((post: { is_approved: any; }) => post.is_approved);
 
 
     const handleAddPost = async () => {
@@ -51,13 +51,13 @@ const PostPage = () => {
         }
     };
 
-    const handleApprovePost = async ({ postId }) => {
+    const handleApprovePost = async ({ postId }: { postId: string }) => {
         try {
             const { data, error } = await approvePost({ postId });
             if (error) throw error;
 
             // Update the local state to reflect the approved post
-            setPosts(prevPosts => prevPosts.map(post =>
+            setPosts((prevPosts: any[]) => prevPosts.map(post =>
                 post.id === postId ? { ...post, is_approved: true } : post
             ));
         } catch (err) {
@@ -117,7 +117,7 @@ const PostPage = () => {
                 </Dialog.Root>
             </div>
             <div className="space-y-4">
-                {filteredPosts.map((post) => (
+                {filteredPosts.map((post: any) => (
                     <Card key={post.id} className="p-4 bg-white shadow rounded">
                         <p>{post.body}</p>
                         <p className="text-sm text-gray-500 mt-2">
