@@ -1,5 +1,4 @@
 "use client";
-import { createClient } from "@/utils/supabase/client";
 
 const API_HOST = process.env.API_HOST;
 
