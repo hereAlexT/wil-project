@@ -18,9 +18,6 @@ const HomePage = () => {
             <p className="text-gray-700 mb-4">
               Welcome to our social awareness platform. Here, you can share your thoughts, connect with like-minded individuals, and make a real difference in your community and beyond.
             </p>
-            {/* <Button className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full text-lg">
-              Start Posting
-            </Button> */}
           </div>
         </div>
       </section>
@@ -34,11 +31,8 @@ const HomePage = () => {
           <div className="md:w-1/2">
             <h2 className="text-3xl font-bold mb-4">Creating Global Impact</h2>
             <p className="text-gray-700 mb-4">
-              Our mission is to amplify voices, spread awareness, and inspire action. By connecting passionate individuals, we're building a community dedicated to addressing social issues and driving positive change worldwide.
+              Our mission is to amplify voices, spread awareness, and inspire action. By connecting passionate individuals, we&apos;re building a community dedicated to addressing social issues and driving positive change worldwide.
             </p>
-            {/* <Button className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-full text-lg">
-              Explore Campaigns
-            </Button> */}
           </div>
         </div>
       </section>
